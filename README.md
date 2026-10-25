@@ -21,12 +21,20 @@
 
 **因此，本项目集的每个选题都遵循同一条主线：**
 
-```
-┌──────────────┐    ┌──────────────────┐    ┌───────────────────────────┐
-│ ① 算法复现    │ →  │ ② 引擎落地         │ →  │ ③ 鸿沟分析 & 系统感知的算法改进 │
-│ HF 参考实现   │    │ vLLM / SGLang     │    │ 理论加速 vs 真实加速差在哪？    │
-│ 对齐论文精度  │    │ 正确性 + 真实加速  │    │ 如何改算法让它"对硬件友好"？    │
-└──────────────┘    └──────────────────┘    └───────────────────────────┘
+```mermaid
+flowchart LR
+    A["<b>① 算法复现</b><br/>HF 参考实现<br/>对齐论文精度"]
+    B["<b>② 引擎落地</b><br/>vLLM / SGLang<br/>正确性 + 真实加速"]
+    C["<b>③ 鸿沟分析 & 算法改进</b><br/>理论与真实加速差在哪？<br/>如何让算法对硬件友好？"]
+    A --> B --> C
+    C -. 系统感知的改进 .-> A
+
+    classDef s1 fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px,color:#0D47A1
+    classDef s2 fill:#E8F5E9,stroke:#43A047,stroke-width:2px,color:#1B5E20
+    classDef s3 fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px,color:#E65100
+    class A s1
+    class B s2
+    class C s3
 ```
 
 第 ③ 步是我们最看重的研究训练：**从系统约束出发反过来改进算法**。很多好的研究 idea 就是从这里来的。例如 EAGLE-2 动态草稿树、Native Sparse Attention 的"硬件对齐"设计、QServe 的 W4A8KV4 协同设计、块扩散（Block Diffusion）对 KV Cache 的兼容，都是这类思路的产物。

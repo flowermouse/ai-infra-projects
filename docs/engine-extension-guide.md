@@ -25,13 +25,24 @@
 
 ## 2. 推荐的落地路径：从侵入性最低的方案开始
 
+```mermaid
+flowchart TB
+    L0["<b>Level 0 · HF 参考实现</b><br/>算法正确性的金标准"]
+    L1["<b>Level 1 · 引擎外的包装</b><br/>在 vLLM 外部做多次调用、后处理<br/>（P11 的部分方法可以只到这一步）"]
+    L2["<b>Level 2 · 插件 / 官方扩展点</b><br/>logits processor、out-of-tree 模型<br/>量化方法注册、dLLM 算法接口"]
+    L3["<b>Level 3 · 修改引擎内部</b><br/>spec decode proposer、attention backend<br/>KV 管理、调度器"]
+    L4["<b>Level 4 · 定制 kernel</b><br/>Triton / CUDA，拿到最后的真实加速"]
+    L0 --> L1 --> L2 --> L3 --> L4
+
+    classDef low fill:#E8F5E9,stroke:#43A047,color:#1B5E20
+    classDef mid fill:#FFF8E1,stroke:#F9A825,color:#5D4037
+    classDef high fill:#FFEBEE,stroke:#E53935,color:#B71C1C
+    class L0,L1 low
+    class L2 mid
+    class L3,L4 high
 ```
-Level 0  HF 参考实现               ← 算法正确性的"金标准"
-Level 1  引擎外的包装               ← 例如在 vLLM 外部做多次调用、后处理（P11 的部分方法可以只到这一步）
-Level 2  插件 / 官方扩展点          ← logits processor、out-of-tree 模型、量化方法注册、dLLM 算法接口
-Level 3  修改引擎内部               ← spec decode proposer、attention backend、KV 管理、调度器
-Level 4  定制 kernel               ← Triton / CUDA，拿到最后的真实加速
-```
+
+> 从上到下，侵入性和工程量递增，能拿到的真实加速潜力也递增。
 
 - **能用低 Level 解决的，不要用高 Level**。但也要意识到，很多算法**只有到 Level 3–4 才能拿到真实加速**；
 - 每上一个 Level，都要和上一 Level 做**正确性对比**（输出一致或精度一致）。
