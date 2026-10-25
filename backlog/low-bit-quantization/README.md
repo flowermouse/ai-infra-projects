@@ -1,4 +1,6 @@
-# P08 · 低比特量化算法的部署：从精度到真实加速
+# 低比特量化算法的部署：从精度到真实加速
+
+> 📦 **候选池项目**：初稿，尚未精修，暂不开放选题。正式开放前会重新调研和修改。
 
 > **难度** ★★★★ ｜ **算法 : 系统** 6 : 4 ｜ **建议人数** 1–2 ｜ **最低硬件** 1×24GB（FP8 需 Ada / Hopper；FP4 需 Blackwell） ｜ **基座** vLLM（compressed-tensors / 自定义量化方法）+ LLM Compressor
 
@@ -38,7 +40,7 @@
 | A. 改进算法 + 复用已有 kernel | 改进 GPTQ / AWQ 的校准方法、混合精度分配，输出 Marlin / Machete 等 kernel 支持的格式 | 系统工作量较小，重点在算法与精度；必须分析加速是否随 batch 消失 |
 | B. 旋转类 W4A8 / W4A4 部署 | QuaRot / SpinQuant / FlatQuant | 需要实现在线变换并接入引擎，系统工作量大，加速潜力也大 |
 | C. 新格式（FP8 / MXFP4 / NVFP4） | 为 FP4 设计更好的 scale 选择或旋转 | 需要对应硬件；最贴近 2026 年的部署趋势 |
-| D. KV Cache 量化 | KIVI 风格的 INT4 / INT2 KV | 与 P05 的思路相关，需要定制 attention kernel |
+| D. KV Cache 量化 | KIVI 风格的 INT4 / INT2 KV | 与正式项目 P03（KV 压缩）的思路相关，需要定制 attention kernel |
 
 ## 5. 任务分解
 

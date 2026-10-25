@@ -57,7 +57,9 @@ flowchart LR
 
 ## 项目一览
 
-难度：★★★ 中等 ｜ ★★★★ 较难 ｜ ★★★★★ 挑战。"算法 : 系统"是该项目工作量的大致比例。
+现阶段只开放 **4 个精选项目**，外加所有人必做的热身。更多选题在[候选池](backlog/README.md)中，打磨成熟后会陆续开放。
+
+难度：★★★ 中等 ｜ ★★★★ 较难。"算法 : 系统"是该项目工作量的大致比例。
 
 ### 热身（所有人必做，2–3 周）
 
@@ -65,48 +67,25 @@ flowchart LR
 |---|---|---|
 | [P00](projects/P00-warmup/README.md) | 推理引擎速成：从 Roofline 到 vLLM 插件 | 跑通 benchmark 和 profiling，写一个最小插件，完成一份"理论 vs 实测"分析 |
 
-### 解码加速
+### 精选项目
 
-| 编号 | 项目 | 难度 | 算法 : 系统 | 最低硬件 |
-|---|---|---|---|---|
-| [P01](projects/P01-speculative-decoding-to-engine/README.md) | 投机解码新方法的引擎落地 | ★★★★ | 5 : 5 | 1×80GB |
-| [P02](projects/P02-batch-aware-speculation/README.md) | 大 Batch 下的投机解码：让加速真实存在 | ★★★★ | 6 : 4 | 1×80GB |
-| [P03](projects/P03-dllm-parallel-decoding/README.md) | 扩散语言模型：并行解码策略的引擎落地 | ★★★★ | 5 : 5 | 1×80GB |
-| [P04](projects/P04-ar-to-block-diffusion/README.md) | 自回归 → 块扩散：模型转换、训练与部署 | ★★★★★ | 7 : 3 | 4–8×80GB |
-
-### KV Cache 与注意力
-
-| 编号 | 项目 | 难度 | 算法 : 系统 | 最低硬件 |
-|---|---|---|---|---|
-| [P05](projects/P05-reasoning-kv-compression/README.md) | 推理模型的解码期 KV Cache 压缩 | ★★★★ | 5 : 5 | 1×24GB |
-| [P06](projects/P06-sparse-prefill-attention/README.md) | 长上下文稀疏注意力的引擎落地 | ★★★★ | 5 : 5 | 1×80GB |
-| [P07](projects/P07-vlm-token-compression/README.md) | 多模态大模型视觉 Token 压缩的服务化 | ★★★★ | 6 : 4 | 1×24GB |
-
-### 模型压缩与架构
-
-| 编号 | 项目 | 难度 | 算法 : 系统 | 最低硬件 |
-|---|---|---|---|---|
-| [P08](projects/P08-low-bit-quantization/README.md) | 低比特量化算法的部署：从精度到真实加速 | ★★★★ | 6 : 4 | 1×24GB（FP8/FP4 需 Ada/Hopper/Blackwell） |
-| [P09](projects/P09-moe-adaptive-experts/README.md) | MoE 自适应专家计算的引擎落地 | ★★★★ | 6 : 4 | 1×80GB |
-| [P10](projects/P10-hybrid-linear-attention-distill/README.md) | Transformer → 混合线性注意力：蒸馏与部署 | ★★★★★ | 7 : 3 | 2–8×80GB |
-
-### 测试时计算与训推
-
-| 编号 | 项目 | 难度 | 算法 : 系统 | 最低硬件 |
-|---|---|---|---|---|
-| [P11](projects/P11-efficient-reasoning-serving/README.md) | 高效推理：思考早停与置信度剪枝的服务化 | ★★★ | 6 : 4 | 1×24GB |
-| [P12](projects/P12-rl-train-inference-mismatch/README.md) | RL 训推不一致：算法校正 vs 系统对齐 | ★★★★ | 6 : 4 | 2×80GB |
+| 编号 | 项目 | 一句话问题 | 难度 | 算法 : 系统 | 最低硬件 |
+|---|---|---|---|---|---|
+| [P01](projects/P01-speculative-decoding/README.md) | 投机解码：从论文到真实加速 | 新的投机解码方法放进 vLLM / SGLang 后还剩多少加速？怎样在大 batch 下依然有效？ | ★★★★ | 5 : 5 | 1×80GB |
+| [P02](projects/P02-dllm-inference/README.md) | 扩散语言模型：并行解码策略的引擎落地 | dLLM 的并行解码优势在真实引擎、大 batch 下是否还存在？ | ★★★★ | 5 : 5 | 1×80GB |
+| [P03](projects/P03-reasoning-kv-compression/README.md) | 推理模型的解码期 KV Cache 压缩 | 论文中 KV 压缩带来的吞吐提升，在 Paged KV + Continuous Batching 中能兑现多少？ | ★★★★ | 5 : 5 | 1×24GB |
+| [P04](projects/P04-efficient-reasoning/README.md) | 高效推理：思考早停与置信度剪枝的服务化 | 少生成的 token 能转化成多少真实的延迟和吞吐收益？ | ★★★ | 6 : 4 | 1×24GB |
 
 > 硬件说明：24GB 指 RTX 3090/4090/A10 一档，80GB 指 A100/H100/H800 一档。详见 [docs/environment.md](docs/environment.md)。
 
 ### 选题建议
 
-- **本科生 / 第一个项目**：P11、P05、P07。机制相对直观，单卡可完成。
-- **研一，偏算法**：P02、P08、P09。核心是设计算法策略，系统改动相对局部。
-- **研一，愿意深入系统**：P01、P03、P06。需要较多地改动引擎内部。
-- **有训练资源、目标做研究**：P04、P10、P12。训练量大，贴近当前研究前沿，容易产出论文 idea。
+- **本科生 / 第一个项目**：P04。机制直观，单卡可完成，系统改动相对局部；
+- **研一，偏算法**：P01（自适应投机策略部分）、P03。核心是设计算法策略，再落地到引擎中；
+- **研一，愿意深入系统**：P01（新方法落地部分）、P02。需要较多地改动引擎内部；
+- **有训练资源、想往研究方向走**：P02 的进阶部分（自回归 → 块扩散转换）。
 
-项目之间可以组队、共享基础设施。例如 P01 / P02 共享投机解码的评测框架，P03 / P04 共享 dLLM 推理代码，P05 / P06 共享注意力 kernel 的经验。
+四个项目之间有天然联系：P01 和 P02 都涉及"一次前向产出多个 token"的并行解码，dLLM 本身也可以用作投机解码的草稿器（如 DFlash）；P03 和 P04 都面向推理（thinking）模型的长输出问题。同一批同学可以共享评测框架和经验。
 
 每个项目建议 **1–2 人**，周期 **10–12 周**（含热身）。允许自拟选题，只要符合"算法 → 引擎落地 → 真实收益"的主线，按 [templates/proposal.md](templates/proposal.md) 写开题。
 
@@ -136,6 +115,7 @@ flowchart LR
 - [docs/environment.md](docs/environment.md)：硬件 / 软件 / 模型 / 数据集建议
 - [docs/reading-list.md](docs/reading-list.md)：分主题阅读清单
 - [templates/](templates/)：开题报告、开发日志、结题报告模板
+- [backlog/](backlog/README.md)：候选池，尚未开放的选题初稿
 
 ---
 

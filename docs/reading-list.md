@@ -14,7 +14,7 @@
 - ★ nano-vllm 源码：https://github.com/GeeeekExplorer/nano-vllm
 - ★ **Speculative Decoding: Performance or Illusion?**（MLSys 2026）：arXiv 2601.11580。这篇是"论文加速 vs 真实加速"的范例，强烈推荐所有人读
 
-## 1. 投机解码（P01、P02）
+## 1. 投机解码（P01）
 
 - Fast Inference from Transformers via Speculative Decoding：arXiv 2211.17192
 - Medusa：arXiv 2401.10774
@@ -24,7 +24,7 @@
 - SmartSpec（基于 goodput 的投机解码）：arXiv 2406.14066
 - Lookahead Decoding：arXiv 2402.02057；SuffixDecoding：arXiv 2411.04975；LayerSkip：arXiv 2404.16710
 
-## 2. 扩散语言模型（P03、P04）
+## 2. 扩散语言模型（P02）
 
 - LLaDA：arXiv 2502.09992；Dream 7B：arXiv 2508.15487
 - Block Diffusion（BD3-LM）：arXiv 2503.09573
@@ -36,7 +36,7 @@
 - SGLang dLLM 支持：https://lmsys.org/blog/2025-12-19-diffusion-llm
 - vLLM DiffusionGemma：https://vllm.ai/blog/2026-06-10-diffusion-gemma
 
-## 3. KV Cache 压缩与稀疏注意力（P05、P06）
+## 3. KV Cache 压缩与稀疏注意力（P03；稀疏注意力属候选池）
 
 - StreamingLLM：arXiv 2309.17453；H2O：arXiv 2306.14048；SnapKV：arXiv 2404.14469
 - R-KV：arXiv 2505.24133
@@ -45,19 +45,19 @@
 - Native Sparse Attention：arXiv 2502.11089
 - The Sparse Frontier（ACL 2026 Findings）
 
-## 4. 多模态 Token 压缩（P07）
+## 4. 多模态 Token 压缩（候选池）
 
 - FastV：arXiv 2403.06764；SparseVLM：arXiv 2410.04417；VisionZip：arXiv 2412.04467
 - TopV（CVPR 2025）：arXiv 2503.18278
 
-## 5. 量化（P08）
+## 5. 量化（候选池）
 
 - GPTQ：arXiv 2210.17323；AWQ：arXiv 2306.00978；SmoothQuant：arXiv 2211.10438
 - QuaRot：arXiv 2404.00456；SpinQuant：arXiv 2405.16406；FlatQuant：arXiv 2410.09426
 - QServe：arXiv 2405.04532
 - KIVI：arXiv 2402.02750
 
-## 6. MoE 与混合架构（P09、P10）
+## 6. MoE 与混合架构（候选池）
 
 - DeepSeekMoE：arXiv 2401.06066；DeepSeek-V3 技术报告：arXiv 2412.19437
 - Harder Tasks Need More Experts：arXiv 2403.07652
@@ -66,7 +66,7 @@
 - Mamba-2 / Transformers are SSMs：arXiv 2405.21060；Gated DeltaNet：arXiv 2412.06464
 - The Mamba in the Llama：arXiv 2408.15237；LoLCATs：arXiv 2410.10254
 
-## 7. 高效推理与 RL（P11、P12）
+## 7. 高效推理与 RL（P04；RL 属候选池）
 
 - DEER：arXiv 2504.15895；EAT：arXiv 2509.26522
 - DeepConf（ICLR 2026）：arXiv 2508.15260

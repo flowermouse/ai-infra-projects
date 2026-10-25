@@ -65,4 +65,4 @@
 - 能用 `nsys` / PyTorch Profiler 看懂一个推理 step 的时间分解，定位你的算法在哪里花了时间；
 - 能读懂 vLLM / SGLang 的启动参数和日志；
 - 能写出可复现的 benchmark（见 [benchmarking.md](benchmarking.md)）；
-- 会写简单的 Triton kernel，至少能读懂并修改现有 kernel（P05 / P06 / P08 / P09 尤其需要）。
+- 会写简单的 Triton kernel，至少能读懂并修改现有 kernel（P03 尤其需要）。

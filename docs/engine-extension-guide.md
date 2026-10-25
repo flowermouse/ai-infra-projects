@@ -12,23 +12,23 @@
 
 | 算法类型 | vLLM 接入点 | SGLang 接入点 | 相关项目 |
 |---|---|---|---|
-| 采样 / 解码控制（早停、预算控制、置信度监控） | 自定义 Logits Processor；`SamplingParams.extra_args` 传递每请求参数 | Custom Logit Processor（需启动参数开启）；前端语言（`fork` / `select` 等） | P11 |
-| 投机解码（新的草稿方法、验证策略） | `--speculative-config`；`vllm/v1/spec_decode/` 下的 proposer；rejection sampler；草稿模型训练用 Speculators | `--speculative-algorithm`；`srt/speculative/` 目录；草稿模型训练用 SpecForge | P01、P02 |
-| 扩散语言模型（dLLM） | Model Runner V2 的 `ModelState` 钩子（参考 DiffusionGemma 的实现） | dLLM 算法接口：`--dllm-algorithm` + `--dllm-algorithm-config`，可以注册自定义算法 | P03、P04 |
-| 注意力变体（稀疏、压缩） | Attention backend（如 `FLASH_ATTN`、`FLASHINFER`、`TRITON_ATTN`，位置以版本为准）；KV cache spec / layout | `srt/layers/attention/` 下的各 backend | P05、P06 |
-| KV Cache 管理（淘汰、压缩） | KV Cache Manager / Block Pool；KV cache spec | `RadixCache`、memory pool | P05 |
-| 多模态 token 处理 | 模型文件（如 `qwen2_5_vl.py` / `qwen3_vl.py`）与 multimodal processor；placeholder token 数在调度前确定 | 模型文件与 multimodal processor | P07 |
-| 量化 | `vllm/model_executor/layers/quantization/`；`@register_quantization_config` 注册自定义方法；compressed-tensors 格式（LLM Compressor 生成） | `srt/layers/quantization/` | P08 |
-| MoE 计算 | `fused_moe` 层与 router；Triton / CUTLASS / DeepGEMM 后端 | `srt/layers/moe/` | P09 |
-| 新模型架构 | Out-of-tree 模型注册：`ModelRegistry.register_model(...)` + `vllm.general_plugins` entry point；也可以先用 Transformers 后端（`--model-impl transformers`）快速验证 | `srt/models/` 下新增模型；外部模型注册机制 | P04、P10 |
-| 训推权重同步 / RL | Native RL APIs（`init_weight_transfer_engine` / `update_weights` 等）；batch invariance 模式（`VLLM_BATCH_INVARIANT=1`） | 权重更新接口；确定性推理模式 | P12 |
+| 采样 / 解码控制（早停、预算控制、置信度监控） | 自定义 Logits Processor；`SamplingParams.extra_args` 传递每请求参数 | Custom Logit Processor（需启动参数开启）；前端语言（`fork` / `select` 等） | P04 |
+| 投机解码（新的草稿方法、验证策略） | `--speculative-config`；`vllm/v1/spec_decode/` 下的 proposer；rejection sampler；草稿模型训练用 Speculators | `--speculative-algorithm`；`srt/speculative/` 目录；草稿模型训练用 SpecForge | P01 |
+| 扩散语言模型（dLLM） | Model Runner V2 的 `ModelState` 钩子（参考 DiffusionGemma 的实现） | dLLM 算法接口：`--dllm-algorithm` + `--dllm-algorithm-config`，可以注册自定义算法 | P02 |
+| 注意力变体（稀疏、压缩） | Attention backend（如 `FLASH_ATTN`、`FLASHINFER`、`TRITON_ATTN`，位置以版本为准）；KV cache spec / layout | `srt/layers/attention/` 下的各 backend | P03；候选池 |
+| KV Cache 管理（淘汰、压缩） | KV Cache Manager / Block Pool；KV cache spec | `RadixCache`、memory pool | P03 |
+| 多模态 token 处理 | 模型文件（如 `qwen2_5_vl.py` / `qwen3_vl.py`）与 multimodal processor；placeholder token 数在调度前确定 | 模型文件与 multimodal processor | 候选池 |
+| 量化 | `vllm/model_executor/layers/quantization/`；`@register_quantization_config` 注册自定义方法；compressed-tensors 格式（LLM Compressor 生成） | `srt/layers/quantization/` | 候选池 |
+| MoE 计算 | `fused_moe` 层与 router；Triton / CUTLASS / DeepGEMM 后端 | `srt/layers/moe/` | 候选池 |
+| 新模型架构 | Out-of-tree 模型注册：`ModelRegistry.register_model(...)` + `vllm.general_plugins` entry point；也可以先用 Transformers 后端（`--model-impl transformers`）快速验证 | `srt/models/` 下新增模型；外部模型注册机制 | P02（进阶）；候选池 |
+| 训推权重同步 / RL | Native RL APIs（`init_weight_transfer_engine` / `update_weights` 等）；batch invariance 模式（`VLLM_BATCH_INVARIANT=1`） | 权重更新接口；确定性推理模式 | 候选池 |
 
 ## 2. 推荐的落地路径：从侵入性最低的方案开始
 
 ```mermaid
 flowchart TB
     L0["<b>Level 0 · HF 参考实现</b><br/>算法正确性的金标准"]
-    L1["<b>Level 1 · 引擎外的包装</b><br/>在 vLLM 外部做多次调用、后处理<br/>（P11 的部分方法可以只到这一步）"]
+    L1["<b>Level 1 · 引擎外的包装</b><br/>在 vLLM 外部做多次调用、后处理<br/>（P04 的部分方法可以只到这一步）"]
     L2["<b>Level 2 · 插件 / 官方扩展点</b><br/>logits processor、out-of-tree 模型<br/>量化方法注册、dLLM 算法接口"]
     L3["<b>Level 3 · 修改引擎内部</b><br/>spec decode proposer、attention backend<br/>KV 管理、调度器"]
     L4["<b>Level 4 · 定制 kernel</b><br/>Triton / CUDA，拿到最后的真实加速"]
